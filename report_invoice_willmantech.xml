@@ -1,0 +1,44 @@
+<template id="report_invoice_willmantech">
+    <t t-call="web.external_layout">
+        <div class="page">
+            
+            <!-- Encabezado de factura -->
+            <h2>Factura <span t-field="doc.name"/></h2>
+            <p>Fecha de emisión: <span t-field="doc.date"/></p>
+            
+            <!-- Detectar si existe algún descuento -->
+            <t t-set="hay_descuentos" t-value="any(line.discount for line in doc.invoice_line_ids)"/>
+            
+            <!-- Tabla de líneas de factura -->
+            <table class="table table-sm" style="width:100%; margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th t-if="hay_descuentos">Descuento</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <t t-foreach="doc.invoice_line_ids" t-as="line">
+                        <tr>
+                            <td t-field="line.name"/>
+                            <td t-field="line.quantity"/>
+                            <td t-field="line.price_unit"/>
+                            <td t-if="hay_descuentos" t-field="line.discount"/>
+                            <td t-field="line.price_subtotal"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            
+            <!-- Total -->
+            <h3 style="margin-top:20px;">
+                Total a pagar: <span t-field="doc.amount_total"/>
+            </h3>
+            
+        </div>
+    </t>
+</template>
